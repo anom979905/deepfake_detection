@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    body, html {
+        height: 100%;
+        background: #ffffff; /* solid white background */
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #333;
+    }
+    .bg {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        background: none; /* removed any background image */
+    }
+    .container-custom {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        max-width: 480px;
+        padding: 2rem;
+        width: 100%;
+    }
+    .logo img {
+        max-width: 180px;
+        margin-bottom: 1.5rem;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    video#videos {
+        width: 100%;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    label {
+        font-weight: 600;
+        display: block;
+        margin-bottom: 0.3rem;
+        color: #444;
+    }
+    #slider {
+        margin-top: 8px;
+        margin-bottom: 16px;
+    }
+    #slider-value {
+        font-weight: 700;
+        color: #5a2a83;
+        margin-left: 8px;
+    }
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .btn-success {
+        background: #5a2a83;
+        border: none;
+        font-weight: 600;
+        padding: 0.75rem;
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+    }
+    .btn-success:hover {
+        background: #7a42b2;
+    }
+    .alert-danger {
+        font-size: 0.9rem;
+        margin-top: 0.25rem;
+    }
+</style>
+
+<div class="bg">
+    <div class="container-custom">
+        <div class="logo text-center">
+            <img src="{% static 'images/logo1.png' %}" alt="Logo">
+        </div>
+        
+        <video controls id="videos" preload="metadata">
+            <source src="" id="video_source" type="video/mp4">
+            Your browser does not support HTML5 video.
+        </video>
+
+        <form method="POST" enctype="multipart/form-data" id="video-upload" novalidate>
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="{{ form.upload_video_file.id_for_label }}">Upload Video</label>
+                {{ form.upload_video_file }}
+                {% if form.upload_video_file.errors %}
+                    {% for each_error in form.upload_video_file.errors %}
+                        <div class="alert alert-danger">{{ each_error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.sequence_length.id_for_label }}">
+                    Sequence Length: <span id="slider-value"></span>
+                </label>
+                <input type="number" hidden id="{{ form.sequence_length.id_for_label }}" name="{{ form.sequence_length.name }}">
+                <div id="slider"></div>
+                {% if form.sequence_length.errors %}
+                    {% for each_error in form.sequence_length.errors %}
+                        <div class="alert alert-danger">{{ each_error }}</div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-success btn-block w-100">Upload</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_cripts %}
+<script src="{% static 'js/script.js' %}"></script>
+<script>
+    $(function () {
+        var sliderSequenceNumbers = [10, 20, 40, 60, 80, 100];
+        var slider = $("div#slider").slider({
+            value: 1,
+            min: 0,
+            max: sliderSequenceNumbers.length - 1,
+            slide: function (event, ui) {
+                $('#{{ form.sequence_length.id_for_label }}').val(sliderSequenceNumbers[ui.value]);
+                $('#slider-value').text(sliderSequenceNumbers[ui.value]);
+            }
+        });
+        $("#{{ form.sequence_length.id_for_label }}").val(sliderSequenceNumbers[$("#slider").slider("value")]);
+        $('#slider-value').text(sliderSequenceNumbers[$("#slider").slider("value")]);
+    });
+</script>
+{% endblock %}
