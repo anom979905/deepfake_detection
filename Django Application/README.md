@@ -62,6 +62,4 @@ docker run -p 80:80 --volumes-from deepfakeapplication \
 
 * Open your browser and go to: [http://localhost:80](http://localhost:80)
 
----
 
-Let me know if you want a simplified version or a bash script for setup!
