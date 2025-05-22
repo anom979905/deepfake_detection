@@ -25,17 +25,9 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Step 4: Prepare Model Files
 
-* Download the trained model from this [Google Drive link](https://drive.google.com/drive/folders/1UX8jXUXyEjhLLZ38tcgOwGsZ6XFSLDJ-?usp=sharing)
-* Create the necessary directories in your project root if not already there:
 
-  ```bash
-  mkdir models uploaded_images uploaded_videos
-  ```
-* Copy the model file (e.g., `model_84_acc_10_frames_final_data.pt`) to the `models/` folder.
-
-### Step 5: Run the Application
+### Step 4: Run the Application
 
 ```bash
 python manage.py runserver
